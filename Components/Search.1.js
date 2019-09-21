@@ -4,10 +4,31 @@ import {
   View,
   TouchableOpacity, StyleSheet
 } from 'react-native';
-
 import SearchBar from 'react-native-searchbar';
 import  {_getDataRef}  from '../Firebase/FirebaseConfig';
-import  {AssMat}  from './AssMatTpl'
+const items = [
+  1337,
+  'janeway',
+  {
+    lots: 'of',
+    different: {
+      types: 0,
+      data: false,
+      that: {
+        can: {
+          be: {
+            quite: {
+              complex: {
+                hidden: [ 'gold!' ],
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  [ 4, 2, 'tree' ],
+];
 
 
 export default class Search extends Component {
@@ -15,10 +36,11 @@ export default class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      assMatList: [],
+      items,
       results: [],
+      assMatList: [],
     };        
-      this._loadAssMatList = this._loadAssMatList.bind(this);
+      //})
       this._handleResults = this._handleResults.bind(this);
     }         
     
@@ -27,22 +49,21 @@ _loadAssMatList() {
     this.setState({
       isLoading: true
     }) */
+
   _getDataRef('AssMatDispo').on('value', (childSnapshot) => {
-    this.setState({
-      //assMatList: Object.values(childSnapshot.val()),
-      assMatList: [...this.state.assMatList, ...Object.values(childSnapshot.val())],
-      //loading: false,
-    });
-  })
+      this.setState({
+        assMatList: childSnapshot.val()
+        })
+    }).bind(this)
 }
       
-  _handleResults(results) {
-    this.setState({ results });
-  }
+      _handleResults(results) {
+        this.setState({ results });
+      }
            
-  componentDidMount() {
-    this._loadAssMatList();
-  }
+      componentDidMount() {
+        this._loadAssMatList();
+    }
 
   render() {
     return (

@@ -8,38 +8,65 @@ class DetailsItem extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      assMatItem: {}
+      assMatItem: []
       //isLoading: true
     }
-  }
 
-    componentDidMount() {
-    //alert(this.props.navigation.state.params.idDetailsItem)
-     this.setState({
+    /* this.setState({
       assMatItem: {
         //this.props.navigation.state.params.assMatThumbnail (autre façon d'écrire)
-        assMatId: this.props.navigation.getParam('assMatId'),
-        assMatThumbnail: this.props.navigation.getParam('assMatThumbnail'),
-        assMatFirstName: this.props.navigation.getParam('assMatFirstName'),
-        assMatLastName: this.props.navigation.getParam('assMatLastName'),
-        assMatStreet: this.props.navigation.getParam('assMatStreet'),
-        assMatCity: this.props.navigation.getParam('assMatCity')
+        key: props.navigation.getParam('key'),
+        assMatId: props.navigation.getParam('assMatId'),
+        assMatThumbnail: props.navigation.getParam('assMatThumbnail'),
+        assMatFirstName: props.navigation.getParam('assMatFirstName'),
+        assMatLastName: props.navigation.getParam('assMatLastName'),
+        assMatStreet: props.navigation.getParam('assMatStreet'),
+        assMatCity: props.navigation.getParam('assMatCity')
       },
-    })  
-  }  
+    }) */
+  }
+
+   componentDidMount() {
+   /* _getDataRef(this.props.navigation.state.params.idDetailsItem).then(data => {
+      this.setState({
+        assMatItem: data,
+        isLoading: false
+      })
+      alert(assMatItem.email)
+    })*/
+
+    /* return firebase.database().ref('/users/' + userId).once('value').then(function (snapshot) {
+      var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+      // ...
+    }); */
+    //alert(this.props.navigation.state.params.idDetailsItem)
+  this.setState({
+    assMatItem: {
+      //this.props.navigation.state.params.assMatThumbnail (autre façon d'écrire)
+      assMatKey: this.props.navigation.getParam('assMatKey'),
+      assMatId: this.props.navigation.getParam('assMatId'),
+      assMatThumbnail: this.props.navigation.getParam('assMatThumbnail'),
+      assMatFirstName: this.props.navigation.getParam('assMatFirstName'),
+      assMatLastName: this.props.navigation.getParam('assMatLastName'),
+      assMatStreet: this.props.navigation.getParam('assMatStreet'),
+      assMatCity: this.props.navigation.getParam('assMatCity')
+    },
+  })
+    
+  } 
 
   _toggleFavorite() {
     const action = { type: "TOGGLE_FAVORITE", value: this.state.assMatItem }
     this.props.dispatch(action)
   }
 
-  /* componentDidUpdate() {
+  componentDidUpdate() {
     //alert(this.state.assMatItem.key)
-  } */
+  }
   
   _displayFavoriteImage() {
     var sourceImage = require('../Assets/Images/favoriteNo.png')
-    if (this.props.favoritesAssMat.findIndex((item) => item.assMatId === this.state.assMatItem.assMatId) !== -1) {
+    if (this.props.favoritesAssMat.findIndex(item => item.assMatKey === this.state.assMatItem.assMatKey) !== -1) {
       // dans nos favoris
       sourceImage = require('../Assets/Images/favoriteYes.png')
     }
@@ -47,14 +74,14 @@ class DetailsItem extends React.Component {
       <Image
         style={styles.favorite_image}
         source={sourceImage}
-      />
+        />
     )
   }
 
   render() {
     const { assMatItem } = this.state
-    //alert(this.state.assMatItem.assMatId)
     if (assMatItem != undefined) {
+      //alert(assMatItem.assMatKey)
       return (
         <View style={styles.scrollview_container}>
           <ScrollView>

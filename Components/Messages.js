@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, FlatList, Text, StyleSheet, Image, ImageBackground,TouchableOpacity} from 'react-native';
 import { ASSMAT_DATA } from '../Data/data';
-import style from '../Style/Style';
+import style from '../Assets/Style/Style';
 
 import { _getDataRef } from '../Firebase/FirebaseConfig'
 

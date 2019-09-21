@@ -25,8 +25,8 @@ class AssMat extends Component {
   _loadAssMatList() {
     _getDataRef('AssMatDispo').on('value', (childSnapshot) => {
       this.setState({
-        assMatList: Object.values(childSnapshot.val()),
-        //assMatList: [...this.state.assMatList, ...Object.values(childSnapshot.val())],
+        //assMatList: Object.values(childSnapshot.val()),
+        assMatList: [...this.state.assMatList, ...Object.values(childSnapshot.val())],
         //loading: false,
       });
     })
@@ -34,7 +34,7 @@ class AssMat extends Component {
 
   _displayDetailsItem = (assMatId, assMatThumbnail, assMatFirstName, assMatLastName, assMatStreet, assMatCity) => {
     //alert("Display item with id " + idDetailsItem)
-    // pour récupérer les paramètres dans le component DetailsItem
+    // pour le récupérer les paramètres dans le component DetailsItem
     this.props.navigation.navigate("DetailsItem", {
       assMatId: assMatId,
       assMatThumbnail: assMatThumbnail,
@@ -59,23 +59,23 @@ class AssMat extends Component {
           <FlatList 
             /* style={{padding:10, height: height * 0.8}} */
             data = { this.state.assMatList }
-            //extraData = {this.props.favoritesAssMat}
+            extraData = {this.props.favoritesAssMat}
             keyExtractor={(item) => item.id.toString()}
             renderItem = {({item}) =>
               <AssMatTpl
                 assMatItem={item}
-                // Ajout d'une props isAssMatFavorite pour indiquer à l'item d'afficher un 🖤 osu non
+                // Ajout d'une props isAssMatFavorite pour indiquer à l'item d'afficher un 🖤 ou non
                 isAssMatFavorite = {(this.props.favoritesAssMat.findIndex(assMatItem => 
-                assMatItem.id === item.id) !== -1) ? true : false}       
+                  assMatItem.id === item.id) !== -1) ? true : false}       
                 _displayDetailsItem = {this._displayDetailsItem}              
               />
             }
-            /* onEndReachedThreshold={0.5}
-            onEndReached={() => {
+            onEndReachedThreshold={0.5}
+             onEndReached={() => {
               if(this.page < this.totalPages) { // On vérifie également qu'on n'a pas atteint la fin de la pagination (totalPages) avant de charger plus d'éléments
                 //this._loadAssMatList();
               }
-            }} */ 
+            }} 
               />
         </ImageBackground>
       </View>             

@@ -7,7 +7,7 @@ import { AssMatTpl } from './AssMatTpl';
 //const styles = style.getMyItemStyle();
 
 
-class AssMat extends Component {
+export class Test extends Component {
   constructor(props) {
     super(props)
 
@@ -18,19 +18,19 @@ class AssMat extends Component {
       assMatList: [],
       isLoading: false,
     }
-    this._loadAssMatList = this._loadAssMatList.bind(this);
+    //this._loadAssMatList = this._loadAssMatList.bind(this);
     this._displayDetailsItem = this._displayDetailsItem.bind(this);
   }
 
-  _loadAssMatList() {
+ /*  _loadAssMatList() {
     _getDataRef('AssMatDispo').on('value', (childSnapshot) => {
       this.setState({
-        assMatList: Object.values(childSnapshot.val()),
-        //assMatList: [...this.state.assMatList, ...Object.values(childSnapshot.val())],
+        //assMatList: Object.values(childSnapshot.val()),
+        assMatList: [...this.state.assMatList, ...Object.values(childSnapshot.val())],
         //loading: false,
       });
     })
-  }
+  } */
 
   _displayDetailsItem = (assMatId, assMatThumbnail, assMatFirstName, assMatLastName, assMatStreet, assMatCity) => {
     //alert("Display item with id " + idDetailsItem)
@@ -45,9 +45,9 @@ class AssMat extends Component {
     })
   }
 
-  componentDidMount() {
+  /* componentDidMount() {
     this._loadAssMatList();
-  }
+  } */
   
   render() {
     let pic = {
@@ -58,24 +58,25 @@ class AssMat extends Component {
         <ImageBackground source={pic} style={{width: '100%', height: '100%'}}> 
           <FlatList 
             /* style={{padding:10, height: height * 0.8}} */
-            data = { this.state.assMatList }
-            //extraData = {this.props.favoritesAssMat}
+            data = { this.props.results }
+            //data = { this.state.assMatList }
+            extraData = {this.props.favoritesAssMat}
             keyExtractor={(item) => item.id.toString()}
             renderItem = {({item}) =>
               <AssMatTpl
                 assMatItem={item}
-                // Ajout d'une props isAssMatFavorite pour indiquer à l'item d'afficher un 🖤 osu non
-                isAssMatFavorite = {(this.props.favoritesAssMat.findIndex(assMatItem => 
-                assMatItem.id === item.id) !== -1) ? true : false}       
+                // Ajout d'une props isAssMatFavorite pour indiquer à l'item d'afficher un 🖤 ou non
+                /* isAssMatFavorite = {(this.props.favoritesAssMat.findIndex(assMatItem => 
+                  assMatItem.id === item.id) !== -1) ? true : false} */       
                 _displayDetailsItem = {this._displayDetailsItem}              
               />
             }
-            /* onEndReachedThreshold={0.5}
+            onEndReachedThreshold={0.5}
             onEndReached={() => {
               if(this.page < this.totalPages) { // On vérifie également qu'on n'a pas atteint la fin de la pagination (totalPages) avant de charger plus d'éléments
                 //this._loadAssMatList();
               }
-            }} */ 
+            }} 
               />
         </ImageBackground>
       </View>             
@@ -88,7 +89,7 @@ const mapStateToProps = state => {
     favoritesAssMat: state.favoritesAssMat
   }
 }
-export default connect(mapStateToProps)(AssMat)
+//export default connect(mapStateToProps)(Test)
 
 const styles = StyleSheet.create({
   main_container: {

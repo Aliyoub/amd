@@ -17,25 +17,45 @@ class AssMat extends Component {
     this.state = {
       assMatList: [],
       isLoading: false,
+      loaded: false,
     }
-    this._loadAssMatList = this._loadAssMatList.bind(this);
-    this._displayDetailsItem = this._displayDetailsItem.bind(this);
   }
 
   _loadAssMatList() {
+     /* if (this.searchedText.length > 0) {
+       this.setState({
+         isLoading: true
+       }) */
+
     _getDataRef('AssMatDispo').on('value', (childSnapshot) => {
-      this.setState({
-        assMatList: Object.values(childSnapshot.val()),
-        //assMatList: [...this.state.assMatList, ...Object.values(childSnapshot.val())],
-        //loading: false,
+      const assMatList = [];
+      childSnapshot.forEach((doc) => {
+        assMatList.push({
+          assMatKey: doc.key,
+          assMatId: doc.toJSON().id.value,
+          assMatThumbnail: doc.toJSON().picture.thumbnail,
+          assMatFirstName: doc.toJSON().name.first,
+          assMatLastName: doc.toJSON().name.last,
+          assMatStreet: doc.toJSON().location.street,
+          assMatcity: doc.toJSON().location.city,
+        })
+        this.setState({
+          assMatList: assMatList,
+          /* assMatList: assMatList.sort((a, b) => {
+            return (a.assMatFirstName);
+            //return (a.assMatUserFirstName < b.assMatUserFirstName);
+          }), */
+          loading: false,
+        });
       });
     })
   }
-
-  _displayDetailsItem = (assMatId, assMatThumbnail, assMatFirstName, assMatLastName, assMatStreet, assMatCity) => {
+  _displayDetailsItem = (assMatKey, assMatId, assMatThumbnail, assMatFirstName, assMatLastName, assMatStreet, assMatCity) =>
+  {
     //alert("Display item with id " + idDetailsItem)
-    // pour récupérer les paramètres dans le component DetailsItem
-    this.props.navigation.navigate("DetailsItem", {
+    // pour le récupérer les paramètres dans le component DetailsItem
+    this.props.navigation.navigate("DetailsItem", { 
+      assMatKey: assMatKey,
       assMatId: assMatId,
       assMatThumbnail: assMatThumbnail,
       assMatFirstName: assMatFirstName,
@@ -48,6 +68,20 @@ class AssMat extends Component {
   componentDidMount() {
     this._loadAssMatList();
   }
+
+ /*  _displayFavoriteImage() {
+    var sourceImage = require('../Assets/Images/favoriteNo.png')
+    if (this.props.favoritesAssMat.findIndex(item => item.key === this.state.assMatItem.key) !== -1) {
+      // dans nos favoris
+      sourceImage = require('../Assets/Images/favoriteYes.png')
+    }
+    return (
+      <Image
+        style={styles.favorite_image}
+        source={sourceImage}
+      />
+    )
+  } */
   
   render() {
     let pic = {
@@ -59,23 +93,22 @@ class AssMat extends Component {
           <FlatList 
             /* style={{padding:10, height: height * 0.8}} */
             data = { this.state.assMatList }
-            //extraData = {this.props.favoritesAssMat}
-            keyExtractor={(item) => item.id.toString()}
+            extraData = {this.props.favoritesAssMat}
+            keyExtractor={(item) => item.assMatKey.toString()}
             renderItem = {({item}) =>
               <AssMatTpl
                 assMatItem={item}
-                // Ajout d'une props isAssMatFavorite pour indiquer à l'item d'afficher un 🖤 osu non
-                isAssMatFavorite = {(this.props.favoritesAssMat.findIndex(assMatItem => 
-                assMatItem.id === item.id) !== -1) ? true : false}       
+                // Ajout d'une props isAssMatFavorite pour indiquer à l'item d'afficher un 🖤 ou non
+                isAssMatFavorite = {(this.props.favoritesAssMat.findIndex(assMatItem => assMatItem.assMatKey === item.assMatKey) !== -1) ? true: false}
                 _displayDetailsItem = {this._displayDetailsItem}              
               />
             }
-            /* onEndReachedThreshold={0.5}
-            onEndReached={() => {
+            onEndReachedThreshold={0.5}
+             onEndReached={() => {
               if(this.page < this.totalPages) { // On vérifie également qu'on n'a pas atteint la fin de la pagination (totalPages) avant de charger plus d'éléments
-                //this._loadAssMatList();
+                 //this._loadAssMatList();
               }
-            }} */ 
+            }} 
               />
         </ImageBackground>
       </View>             

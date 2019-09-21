@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  TouchableOpacity,
+  TouchableOpacity, ImageBackground
 } from 'react-native';
 import SearchBar from 'react-native-searchbar';
 
@@ -44,7 +44,6 @@ export default class Parents extends Component {
   _handleResults(results) {
     this.setState({ results });
   }
-
   render() {
     return (
       <View>
@@ -73,5 +72,5 @@ export default class Parents extends Component {
         />
       </View>
     );
-  }
+  } 
 }

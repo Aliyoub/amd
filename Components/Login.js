@@ -3,7 +3,7 @@ import {Text, Alert, TouchableOpacity, TextInput, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'firebase'
 import User from '../User';
-import style from '../Style/Style';
+import style from '../Assets/Style/Style';
 
 
 const styles = style.getLoginStyle();

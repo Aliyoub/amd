@@ -1,17 +1,15 @@
 import React, {Fragment} from 'react'
-import {StyleSheet, View, StatusBar, Text, TouchableOpacity, FlatList, ImageBackground} from 'react-native'
+import {StyleSheet, View, StatusBar, Text, TouchableOpacity, FlatList} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import SearchBar from 'react-native-searchbar';
 import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view'
 
-import  {_getDataRef}  from '../Firebase/FirebaseConfig';
 import AssMat from './AssMat'
 import Parents from './Parents'
-import Messages from './Messages'
-//import { Test } from './Test';
-//import { SearchResultsTpl } from './SearchResultsTpl';
-import AssMatTpl from './AssMatTpl'
+import {Search} from './Search'
 
+import  {_getDataRef}  from '../Firebase/FirebaseConfig';
+import { SearchResultsTpl } from './SearchResultsTpl';
 
 
 export default class Home extends React.Component {
@@ -77,83 +75,58 @@ export default class Home extends React.Component {
     componentDidMount() {
     this._loadAssMatList();
     }
-
-    _displayDetailsItem = (assMatId, assMatThumbnail, assMatFirstName, assMatLastName, assMatStreet, assMatCity) => {
-        //alert("Display item with id " + idDetailsItem)
-        // pour récupérer les paramètres dans le component DetailsItem
-        this.props.navigation.navigate("DetailsItem", {
-            assMatId: assMatId,
-            assMatThumbnail: assMatThumbnail,
-            assMatFirstName: assMatFirstName,
-            assMatLastName: assMatLastName,
-            assMatStreet: assMatStreet,
-            assMatCity: assMatCity
-        })
-    }
     
     render(){
         if (!this.state.searchBarExist){
             return (
-            <Fragment>
-                <StatusBar backgroundColor= '#F660AA' barStyle="dark-content" />                 
-                {this._renderHeader()}
-                <ScrollableTabView 
-                    //initialPage={0}
-                    tabBarUnderlineStyle = {{backgroundColor: "#fff", height:2.5}} 
-                    tabBarBackgroundColor = "#FCA4F0" 
-                    tabBarActiveTextColor = "#fff" 
-                    tabBarInactiveTextColor = "#F660AA" 
-                    //onChangeTab={(index) => this.handleChangeTab(index)}
-                    onChangeTab={({i}) => this.setState({tab : i}) }
+        <Fragment>
+            <StatusBar backgroundColor= '#F660AA' barStyle="dark-content" />                 
+            {this._renderHeader()}
+            <ScrollableTabView 
+                //initialPage={0}
+                tabBarUnderlineStyle = {{backgroundColor: "#fff", height:2.5}} 
+                tabBarBackgroundColor = "#FCA4F0" 
+                tabBarActiveTextColor = "#fff" 
+                tabBarInactiveTextColor = "#F660AA" 
+                //onChangeTab={(index) => this.handleChangeTab(index)}
+                onChangeTab={({i}) => this.setState({tab : i}) }
                 >
-                    {/* <Home tabLabel="HOME" /> */}
-                    <AssMat tabLabel="ASS MAT" {...this.props} />
-                    <Parents tabLabel="PARENTS" {...this.props} />
-                    <Messages tabLabel="MESSAGES" {...this.props} />
-                </ScrollableTabView>
-                <SearchBar
-                    ref={(ref) => this.searchBar = ref}
-                    //data={items}
-                    data={this.state.assMatList}
-                    handleResults={this._handleResults}
-                    placeholder = "Recherche..."
-                    iconColor = "#F660AA"
-                    //showOnLoad
-                    onBack = {this._hideSearchBar}
-                />  
-            </Fragment>              
-            )
-        } 
+                {/* <Home tabLabel="HOME" /> */}
+                <AssMat tabLabel="ASS MAT"  {...this.props} />
+                <Parents tabLabel="PARENTS" {...this.props} />
+                <Search tabLabel="Search" {...this.props} />
+            </ScrollableTabView>
+            <SearchBar
+                ref={(ref) => this.searchBar = ref}
+                //data={items}
+                data={this.state.assMatList}
+                handleResults={this._handleResults}
+                placeholder = "Recherche..."
+                iconColor = "#F660AA"
+                //showOnLoad
+                onBack = {this._hideSearchBar}
+            />  
+        </Fragment>              
+        )
+     } 
      else{
-      let pic = {uri: 'https://cdn.pixabay.com/photo/2013/02/21/19/10/mother-84628_960_720.jpg'};                   
         return (
             <Fragment>
                 <StatusBar backgroundColor= '#F660AA' barStyle="dark-content" />                 
                 {this._renderHeader()}
                 <View style={{ marginTop: 110 }}>
-                    {/* <ImageBackground source={pic} style={{width: '100%', height: '100%'}}> */} 
-                        <FlatList 
-                            /* style={{padding:10, height: height * 0.8}} */
-                            data = { this.state.results }
-                            extraData = {this.props.favoritesAssMat}
-                            keyExtractor={(item) => item.id.toString()}
-                            renderItem = {({item}) =>
-                            <AssMatTpl
-                                assMatItem={item}
-                                // Ajout d'une props isAssMatFavorite pour indiquer à l'item d'afficher un 🖤 ou non
-                                /* isAssMatFavorite = {(this.props.favoritesAssMat.findIndex(assMatItem => 
-                                assMatItem.id === item.id) !== -1) ? true : false}  */      
-                                // _displayDetailsItem = {this._displayDetailsItem}              
-                            />
-                            }
-                            onEndReachedThreshold={0.5}
-                            onEndReached={() => {
-                            if(this.page < this.totalPages) { // On vérifie également qu'on n'a pas atteint la fin de la pagination (totalPages) avant de charger plus d'éléments
-                                //this._loadAssMatList();
-                            }
-                            }} 
-                            />
-                    {/* </ImageBackground> */}
+                    {
+                        this.state.results.map((result, i) => {
+                            return (
+                                /* <Text key={i}>
+                                {typeof result === 'object' && !(result instanceof Array) ? 'gold object!' :
+                                result.toString() } {result.name.first.toString()}
+                                </Text>  */
+                                
+                                <SearchResultsTplSaved assMatItem = {result} />
+                                );
+                            })
+                        }
                 </View>
                 <SearchBar
                     ref={(ref) => this.searchBar = ref}
@@ -173,7 +146,7 @@ export default class Home extends React.Component {
                 />   
             </Fragment>              
             )
-        }
+     }
     }
     
     /* handleChangeTab(index) {
