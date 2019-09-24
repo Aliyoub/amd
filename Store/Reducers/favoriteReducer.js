@@ -6,7 +6,7 @@ function toggleFavorite(state = initialState, action) {
     let nextState
     switch (action.type) {
         case 'TOGGLE_FAVORITE':
-            const favoriteAssMatIndex = state.favoritesAssMat.findIndex(item => item.id === action.value.id)
+            const favoriteAssMatIndex = state.favoritesAssMat.findIndex(item => item.assMatKey === action.value.assMatKey)
             if (favoriteAssMatIndex !== -1) {
                 // Le AssMat est déjà dans les favoris, on le supprime de la liste
                 nextState = {

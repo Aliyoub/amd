@@ -3,50 +3,45 @@ import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native'
 
 export class AssMatTpl extends React.Component{
 
-    _displayFavoriteImage() {
-        if (this.props.isAssMatFavorite) {
-            return (
-                <Image 
-                    style={[styles.favorite_image]} 
-                    source = { require('../Assets/Images/favoriteYes.png') }
-                />
-            )            
-        }
-    }
-    render(){ 
-        const { assMatItem, _displayDetailsItem} = this.props
-        return(
-        <View style={{backgroundColor: '#CCDCED', marginBottom: 1, paddingTop:7 }} opacity={0.5}>                    
-            <TouchableOpacity style={styles.main_container} 
-                onPress={() => _displayDetailsItem(
-                    assMatItem.id,
-                    assMatItem.picture.thumbnail,
-                    assMatItem.name.first,
-                    assMatItem.name.last, 
-                    assMatItem.location.street, 
-                    assMatItem.location.city)
-                }>                       
-                <View style={{justifyContent:'center', alignSelf:'flex-start', marginLeft:7}}>
-                    <Image style={{width: 49.5, height: 43.5, borderRadius:50}} source = {{uri:assMatItem.picture.thumbnail}} />
-                </View>
-                <View style={styles.userInfosWithoutAvatar}>
-                    <View style={{flex:1}}>
-                        <Text style={styles.user_name}>
-                            {this._displayFavoriteImage()}
-                            {assMatItem.name.first} {assMatItem.name.last} {' '}
-                        </Text>
-                        <Text style={styles.user_address}>{assMatItem.location.street} - {assMatItem.location.city}</Text>
-                        <View style={styles.blocAtTheBottomOfItem}>
-                            <Text style={{color:'#AC1354',fontWeight: 'bold',fontSize: 12}}>Dispo: oui  </Text>
-                            <Text style={{color:'#AC1354',fontWeight: 'bold',fontSize: 12}}>Place(s): 3  </Text>
-                            <Text style={{color:'#AC1354',fontWeight: 'bold',fontSize: 12}}>Expérience: 5</Text>
-                        </View>           
-                    </View>
-                </View>
-            </TouchableOpacity>
-        </View>
-        )
-    }
+	_displayFavoriteImage() {
+		if (this.props.isAssMatFavorite) {
+			return (
+				<Image 
+						style={[styles.favorite_image]} 
+						source = { require('../Assets/Images/favoriteYes.png') }
+				/>
+			)            
+		}
+	}
+
+	render(){ 
+		const { assMatItem, _displayDetailsItem} = this.props
+		return(
+		<View style={{backgroundColor: '#CCDCED', marginBottom: 1, paddingTop:7 }} opacity={0.5}>                    
+			<TouchableOpacity style={styles.main_container} 
+				onPress={() => _displayDetailsItem(assMatItem.assMatKey)					
+				}>                       
+				<View style={{justifyContent:'center', alignSelf:'flex-start', marginLeft:7}}>
+					<Image style={{width: 49.5, height: 43.5, borderRadius:50}} source = {{uri:assMatItem.assMatThumbnail}} />
+				</View>
+					<View style={styles.userInfosWithoutAvatar}>
+						<View style={{flex:1}}>
+							<Text style={styles.user_name}>
+								{this._displayFavoriteImage()}
+								{assMatItem.assMatLastName} {assMatItem.assMatFirstName} {' '}
+							</Text>
+							<Text style={styles.user_address}>{assMatItem.assMatStreett} - {assMatItem.assMatcity}</Text>
+							<View style={styles.blocAtTheBottomOfItem}>
+								<Text style={{color:'#AC1354',fontWeight: 'bold',fontSize: 12}}>Dispo: oui  </Text>
+								<Text style={{color:'#AC1354',fontWeight: 'bold',fontSize: 12}}>Place(s): 3  </Text>
+								<Text style={{color:'#AC1354',fontWeight: 'bold',fontSize: 12}}>Expérience: 5</Text>
+							</View>           
+						</View>
+					</View>
+			</TouchableOpacity>
+		</View>
+		)
+	}
 }
 
 const styles = StyleSheet.create({

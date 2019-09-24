@@ -8,42 +8,16 @@ class DetailsItem extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      assMatItem: undefined
+      assMatItem: {}
       //isLoading: true
     }
   }
 
     componentDidMount() {
-      _getDataRef('AssMatDispo/' + this.props.navigation.state.params.assMatKey).once('value').then(snapshot => {
-        this.setState({
-          assMatItem: {
-            assMatKey: this.props.navigation.getParam('assMatKey'),
-            assMatId: snapshot.val().id,
-            assMatThumbnail: snapshot.val().picture.thumbnail,
-            assMatFirstName: snapshot.val().name.first,
-            assMatLastName: snapshot.val().name.last,
-            assMatStreet: snapshot.val().location.street,
-            assMatCity: snapshot.val().location.city
-            },
-          //isLoading: false
-        })
-      })
-      /* _getDataRef('AssMatDispo/' + this.props.navigation.state.params.assMatKey).then(data => {
-        this.setState({
-          assMatItem: data,
-          isLoading: false
-        })
-      }) */
-
-      /* return firebase.database().ref('/users/' + userId).once('value').then(function (snapshot) {
-        var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-        // ...
-      }); */
-
-     /* this.setState({
+    //alert(this.props.navigation.state.params.idDetailsItem)
+     this.setState({
       assMatItem: {
         //this.props.navigation.state.params.assMatThumbnail (autre façon d'écrire)
-        assMatKey: this.props.navigation.getParam('assMatKey'),
         assMatId: this.props.navigation.getParam('assMatId'),
         assMatThumbnail: this.props.navigation.getParam('assMatThumbnail'),
         assMatFirstName: this.props.navigation.getParam('assMatFirstName'),
@@ -51,7 +25,7 @@ class DetailsItem extends React.Component {
         assMatStreet: this.props.navigation.getParam('assMatStreet'),
         assMatCity: this.props.navigation.getParam('assMatCity')
       },
-    }) */  
+    })  
   }  
 
   _toggleFavorite() {
@@ -65,8 +39,7 @@ class DetailsItem extends React.Component {
   
   _displayFavoriteImage() {
     var sourceImage = require('../Assets/Images/favoriteNo.png')
-    if (this.props.favoritesAssMat.findIndex((item) => 
-    item.assMatKey === this.state.assMatItem.assMatKey) !== -1) {
+    if (this.props.favoritesAssMat.findIndex((item) => item.assMatId === this.state.assMatItem.assMatId) !== -1) {
       // dans nos favoris
       sourceImage = require('../Assets/Images/favoriteYes.png')
     }
@@ -80,24 +53,23 @@ class DetailsItem extends React.Component {
 
   render() {
     const { assMatItem } = this.state
-   //alert(this.props.navigation.state.params.assMatKey)
-   if (assMatItem != undefined) {
-    //alert(assMatItem.picture.thumbnail)
+    //alert(this.state.assMatItem.assMatId)
+    if (assMatItem != undefined) {
       return (
         <View style={styles.scrollview_container}>
           <ScrollView>
             <Image
               style={styles.image}
-              source={{uri: assMatItem.assMatThumbnail}}
+              source={{uri: this.state.assMatItem.assMatThumbnail}}
             />
-          <Text style={styles.title_text}>{assMatItem.assMatFirstName} {assMatItem.assMatLastName}</Text>   
+          <Text style={styles.title_text}>{this.state.assMatItem.assMatFirstName} {this.state.assMatItem.assMatLastName}</Text>   
           <TouchableOpacity
             style={styles.favorite_container}
             onPress={() => this._toggleFavorite()}>
             {this._displayFavoriteImage()}
           </TouchableOpacity>
-          <Text>{assMatItem.assMatStreet}</Text>
-          <Text>{assMatItem.assMatCity}</Text>
+          <Text>{this.state.assMatItem.assMatStreet}</Text>
+          <Text>{this.state.assMatItem.assMatcity}</Text>
           <Text style={styles.title_text}>Commentaire</Text>
           <Text>Aucun commentaire pour l'instant</Text>
           <Text style={styles.title_text}>Espace Accueil</Text>
@@ -106,7 +78,7 @@ class DetailsItem extends React.Component {
         </View>
         
       )
-    }else return null
+    }
   }
 }
 

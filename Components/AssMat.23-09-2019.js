@@ -24,35 +24,25 @@ class AssMat extends Component {
 
   _loadAssMatList() {
     _getDataRef('AssMatDispo').on('value', (childSnapshot) => {
-      const assMatList = [];
-      childSnapshot.forEach((doc) => {
-        assMatList.push({
-          assMatKey: doc.key,
-          assMatId: doc.toJSON().id.value,
-          assMatThumbnail: doc.toJSON().picture.thumbnail,
-          assMatFirstName: doc.toJSON().name.first,
-          assMatLastName: doc.toJSON().name.last,
-          assMatStreet: doc.toJSON().location.street,
-          assMatcity: doc.toJSON().location.city,
-        });
-        this.setState({
-          assMatList: assMatList,
-          loading: false,
-        });
-        /* this.setState({
-          assMatList: assMatDispoList.sort((a, b) => {
-            return (a.assMatUserFirstName);
-            //return (a.assMatUserFirstName < b.assMatUserFirstName);
-          }),
-          loading: false,
-        }); */
+      this.setState({
+        assMatList: Object.values(childSnapshot.val()),
+        //assMatList: [...this.state.assMatList, ...Object.values(childSnapshot.val())],
+        //loading: false,
       });
-    });
+    })
   }
 
-  _displayDetailsItem = (assMatKey) => {
+  _displayDetailsItem = (assMatId, assMatThumbnail, assMatFirstName, assMatLastName, assMatStreet, assMatCity) => {
+    //alert("Display item with id " + idDetailsItem)
     // pour récupérer les paramètres dans le component DetailsItem
-    this.props.navigation.navigate("DetailsItem", {assMatKey: assMatKey})         
+    this.props.navigation.navigate("DetailsItem", {
+      assMatId: assMatId,
+      assMatThumbnail: assMatThumbnail,
+      assMatFirstName: assMatFirstName,
+      assMatLastName: assMatLastName,
+      assMatStreet: assMatStreet,
+      assMatCity: assMatCity
+    })
   }
 
   componentDidMount() {
@@ -70,15 +60,13 @@ class AssMat extends Component {
             /* style={{padding:10, height: height * 0.8}} */
             data = { this.state.assMatList }
             extraData = {this.props.favoritesAssMat}
-            keyExtractor = {(item) => item.assMatKey.toString()}
+            keyExtractor={(item) => item.id.toString()}
             renderItem = {({item}) =>
               <AssMatTpl
                 assMatItem={item}
                 // Ajout d'une props isAssMatFavorite pour indiquer à l'item d'afficher un 🖤 osu non
                 isAssMatFavorite = {(this.props.favoritesAssMat.findIndex(assMatItem => 
-                  assMatItem.assMatKey === item.assMatKey) !== -1) ? true : false
-                  }
-                 // assMatItem.id === item.id) !== -1) ? true : false}                                         
+                  assMatItem.id === item.id) !== -1) ? true : false}                                         
                 _displayDetailsItem = {this._displayDetailsItem}              
               />
             }

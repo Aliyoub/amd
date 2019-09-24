@@ -4,12 +4,12 @@ import Navigation from './Navigation/Navigation'
 import Store from './Store/configureStore'
 
 export default class App extends React.Component {
-    render(){
-        return(
-            <Provider store={Store}>
-                <Navigation/>
-            </Provider>
-        )
-    }   
+	render(){
+		return(
+			<Provider store={Store}>
+				<Navigation/>
+			</Provider>
+		)
+	}   
 }
 console.disableYellowBox = true
