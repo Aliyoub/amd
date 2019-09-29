@@ -1,5 +1,6 @@
 import React from 'react'
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export class AssMatTpl extends React.Component{
 
@@ -27,7 +28,10 @@ export class AssMatTpl extends React.Component{
 					<View style={styles.userInfosWithoutAvatar}>
 						<View style={{flex:1}}>
 							<Text style={styles.user_name}>
-								{this._displayFavoriteImage()}
+                                {this._displayFavoriteImage()}
+                            {/* <Icon name="favorite" color='#F660AA' size={17} 
+                                style={{marginLeft:30}}                         
+                            /> */}{' '}
 								{assMatItem.assMatLastName} {assMatItem.assMatFirstName} {' '}
 							</Text>
 							<Text style={styles.user_address}>{assMatItem.assMatStreett} - {assMatItem.assMatcity}</Text>

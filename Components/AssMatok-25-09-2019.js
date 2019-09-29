@@ -16,12 +16,40 @@ class AssMat extends Component {
  
     this.state = {
       assMatList: [],
+      isLoading: false,
     }
+    this._loadAssMatList = this._loadAssMatList.bind(this);
+    this._displayDetailsItem = this._displayDetailsItem.bind(this);
+  }
+
+  _loadAssMatList() {
+    _getDataRef('AssMatDispo').on('value', (childSnapshot) => {
+      const assMatList = [];
+      childSnapshot.forEach((doc) => {
+        assMatList.push({
+          assMatKey: doc.key,
+          assMatId: doc.toJSON().id.value,
+          assMatThumbnail: doc.toJSON().picture.thumbnail,
+          assMatFirstName: doc.toJSON().name.first,
+          assMatLastName: doc.toJSON().name.last,
+          assMatStreet: doc.toJSON().location.street,
+          assMatcity: doc.toJSON().location.city,
+        });
+        this.setState({
+          assMatList: assMatList,
+          loading: false,
+        });
+      });
+    });
   }
 
   _displayDetailsItem = (assMatKey) => {
     // pour récupérer les paramètres dans le component DetailsItem
     this.props.navigation.navigate("DetailsItem", {assMatKey: assMatKey})         
+  }
+
+  componentDidMount() {
+    this._loadAssMatList();
   }
   
   render() {
@@ -33,7 +61,7 @@ class AssMat extends Component {
         <ImageBackground source={pic} style={{width: '100%', height: '100%'}}> 
           <FlatList 
             /* style={{padding:10, height: height * 0.8}} */
-            data = { this.props.assMatList }
+            data = { this.state.assMatList }
             extraData = {this.props.favoritesAssMat}
             keyExtractor = {(item) => item.assMatKey.toString()}
             renderItem = {({item}) =>
@@ -47,10 +75,12 @@ class AssMat extends Component {
                 _displayDetailsItem = {this._displayDetailsItem}              
               />
             }
-            onEndReachedThreshold={0.5}
+            /* onEndReachedThreshold={0.5}
             onEndReached={() => {
-              this.props._loadAssMatList();
-            }} 
+              if(this.page < this.totalPages) { // On vérifie également qu'on n'a pas atteint la fin de la pagination (totalPages) avant de charger plus d'éléments
+                //this._loadAssMatList();
+              }
+            }} */ 
           />
         </ImageBackground>
       </View>             

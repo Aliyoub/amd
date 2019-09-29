@@ -7,7 +7,6 @@ import {
 
 import SearchBar from 'react-native-searchbar';
 import  {_getDataRef}  from '../Firebase/FirebaseConfig';
-import  {AssMat}  from './AssMatTpl'
 
 
 export default class Search extends Component {

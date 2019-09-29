@@ -1,9 +1,7 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import AssMat from './AssMat'
-import { connect } from 'react-redux'
+import { StyleSheet, Text } from 'react-native'
 
-class Favorites extends React.Component {
+export default class Operation extends React.Component {
 
   render() {
     return (
@@ -14,16 +12,9 @@ class Favorites extends React.Component {
         // Ici (en dessous) on est bien dans le cas de la liste des 'ass mat' favoris. 
         //Ce booléen à true permettra d'empêcher de lancer la recherche de plus de 'ass mat' 
         //après un scroll lorsqu'on est sur la vue Favoris.
-        //favoriteList={true} 
+        favoriteList={true} 
       />
     )
   }
 }
 const styles = StyleSheet.create({})
-
-const mapStateToProps = state => {
-  return {
-    favoritesAssMat: state.favoritesAssMat
-  }
-}
-export default connect(mapStateToProps)(Favorites)
