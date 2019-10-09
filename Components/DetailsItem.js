@@ -20,6 +20,8 @@ class DetailsItem extends React.Component {
             assMatKey: this.props.navigation.getParam('assMatKey'),
             assMatId: snapshot.val().id,
             assMatThumbnail: snapshot.val().picture.thumbnail,
+            assMatMedium: snapshot.val().picture.medium,
+            assMatLarge: snapshot.val().picture.large,
             assMatFirstName: snapshot.val().name.first,
             assMatLastName: snapshot.val().name.last,
             assMatStreet: snapshot.val().location.street,
@@ -82,22 +84,28 @@ class DetailsItem extends React.Component {
     const { assMatItem } = this.state
    //alert(this.props.navigation.state.params.assMatKey)
    if (assMatItem != undefined) {
-    //alert(assMatItem.picture.thumbnail)
+    //alert(assMatItem.assMatThumbnail)
       return (
         <View style={styles.scrollview_container}>
           <ScrollView>
-            <Image
-              style={styles.image}
-              source={{uri: assMatItem.assMatThumbnail}}
-            />
-          <Text style={styles.title_text}>{assMatItem.assMatFirstName} {assMatItem.assMatLastName}</Text>   
-          <TouchableOpacity
-            style={styles.favorite_container}
-            onPress={() => this._toggleFavorite()}>
-            {this._displayFavoriteImage()}
-          </TouchableOpacity>
-          <Text>{assMatItem.assMatStreet}</Text>
-          <Text>{assMatItem.assMatCity}</Text>
+            <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+              <Image style={styles.image} source={{uri: assMatItem.assMatLarge}}/>
+              <TouchableOpacity
+                style={styles.favorite_container}
+                onPress={() => this._toggleFavorite()}>
+                {this._displayFavoriteImage() }
+              </TouchableOpacity>
+            </View>
+          <Text style={styles.title_text}>
+            {assMatItem.assMatFirstName.charAt(0).toUpperCase() + assMatItem.assMatFirstName.slice(1)}{' '}
+            {assMatItem.assMatLastName.charAt(0).toUpperCase() + assMatItem.assMatLastName.slice(1)}
+          </Text>   
+          <Text>
+            {assMatItem.assMatStreet.charAt(0).toUpperCase() + assMatItem.assMatStreet.slice(1)}
+          </Text>
+          <Text>
+            {assMatItem.assMatCity.charAt(0).toUpperCase() + assMatItem.assMatCity.slice(1)}
+          </Text>
           <Text style={styles.title_text}>Commentaire</Text>
           <Text>Aucun commentaire pour l'instant</Text>
           <Text style={styles.title_text}>Espace Accueil</Text>
@@ -130,7 +138,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F9FA'
   },
   image: {
-    //height: 169,
+    height: 169,
+    width:169,
     margin: 5
   },
   title_text: {

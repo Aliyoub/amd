@@ -2,10 +2,10 @@ import React from 'react'
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-export class AssMatTpl extends React.Component{
+export class ParentsTpl extends React.Component{
 
 	_displayFavoriteImage() {
-		if (this.props.isAssMatFavorite) {
+		if (this.props.isParentsFavorite) {
 			return (
 				<Image 
                     style={[styles.favorite_image]} 
@@ -24,32 +24,32 @@ export class AssMatTpl extends React.Component{
         const randomPlace = randomPlaceArray[Math.floor(Math.random() * randomPlaceArray.length)];
         const randomExperience = randomExperienceArray[Math.floor(Math.random() * randomExperienceArray.length)];
 
-		const { assMatItem, _displayDetailsItem} = this.props
+		const { parentsItem, _displayParentsDetailsItem} = this.props
 		return(
 		<View style={styles.main_container} opacity={0.7}>                    
 			<TouchableOpacity style={styles.subMain_container} 
-				onPress={() => _displayDetailsItem(assMatItem.assMatKey)					
+				onPress={() => _displayParentsDetailsItem(parentsItem.parentKey)					
 				}>                       
 				<View style={styles.userThumnailContainer}>
-					<Image style={styles.userThumnail} source = {{uri:assMatItem.assMatThumbnail}} />
+					<Image style={styles.userThumnail} source = {{uri:parentsItem.parentThumbnail}} />
 				</View>
 					<View style={styles.userInfosWithoutAvatar}>
 						<View style={{flex:1}}>
 							<Text style={styles.user_name}>
                                 {this._displayFavoriteImage()}
-                            {/* <Icon name="favorite" color='#DA2C82' size={17} 
+                            {/* <Icon name="favorite" color='#F660AA' size={17} 
                                 style={{marginLeft:30}}                         
                             /> */}{' '}
-								{assMatItem.assMatLastName.charAt(0).toUpperCase() + assMatItem.assMatLastName.slice(1)} {' '}
-                                {assMatItem.assMatFirstName.charAt(0).toUpperCase() + assMatItem.assMatFirstName.slice(1)} {' '}
+								{parentsItem.parentLastName.charAt(0).toUpperCase() + parentsItem.parentLastName.slice(1)} {' '}
+                                {parentsItem.parentFirstName.charAt(0).toUpperCase() + parentsItem.parentFirstName.slice(1)} {' '}
 							</Text>
 							<Text style={styles.user_address}>
-                            {/* assMatItem.assMatStreet.charAt(0).toUpperCase() + assMatItem.assMatStreet.slice(1) */} {/* - */} 
-                            {assMatItem.assMatCity.charAt(0).toUpperCase() + assMatItem.assMatCity.slice(1)}</Text>
+                            {/* parentsItem.parentStreet.charAt(0).toUpperCase() + parentsItem.parentStreet.slice(1) */} {/* - */} 
+                            {parentsItem.parentCity.charAt(0).toUpperCase() + parentsItem.parentCity.slice(1)}</Text>
 							<View style={styles.blocAtTheBottomOfItem}>
-								<Text style={{color:'#DA2C82',fontWeight: 'bold',fontSize: 12}}>Dispo: {randomOuiNon}  </Text>
-								<Text style={{color:'#DA2C82',fontWeight: 'bold',fontSize: 12}}>Place(s): {randomPlace}  </Text>
-								<Text style={{color:'#DA2C82',fontWeight: 'bold',fontSize: 12}}>Expérience: {randomExperience}</Text>
+								<Text style={{color:'#AC1354',fontWeight: 'bold',fontSize: 12}}>Dispo: {randomOuiNon}  </Text>
+								<Text style={{color:'#AC1354',fontWeight: 'bold',fontSize: 12}}>Place(s): {randomPlace}  </Text>
+								<Text style={{color:'#AC1354',fontWeight: 'bold',fontSize: 12}}>Expérience: {randomExperience}</Text>
 							</View>           
 						</View>
 					</View>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 
     user_name: {
         marginLeft: 15,
-        color: '#DA2C82',
+        color: '#AC1354',
         //color: '#C50707',
         fontWeight: 'bold',
         fontSize: 14,
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     },
     user_address: {
         marginLeft: 15,
-        color: '#DA2C82',
+        color: '#AC1354',
         //color: '#C50707',
         fontWeight: 'bold',
         fontSize: 12

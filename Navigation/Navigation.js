@@ -2,7 +2,9 @@ import { createStackNavigator, createAppContainer  } from 'react-navigation'
 
 import Home from '../Components/Home'
 import DetailsItem from '../Components/DetailsItem'
+import ParentsDetailsItem from '../Components/ParentsDetailsItem'
 import Favorites from '../Components/Favorites'
+import ParentsFavorites from '../Components/ParentsFavorites'
 import Messages from '../Components/Messages'
 
 const SearchStackNavigator = createStackNavigator({
@@ -19,13 +21,25 @@ const SearchStackNavigator = createStackNavigator({
     DetailsItem: {
         screen: DetailsItem,
         navigationOptions: {
-            title: 'Details',
+            title: 'Détails Ass Mat',
+        }
+    },
+    ParentsDetailsItem: {
+        screen: ParentsDetailsItem,
+        navigationOptions: {
+            title: 'Détails Parents',
         }
     },
     Favorites: {
         screen: Favorites,
         navigationOptions: {
-            title: 'MES FAVORIS',
+            title: 'MES FAVORIS ASS MAT',
+        }
+    },
+    ParentsFavorites: {
+        screen: ParentsFavorites,
+        navigationOptions: {
+            title: 'MES FAVORIS PARENTS',
         }
     },
 })

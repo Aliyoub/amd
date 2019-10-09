@@ -5,15 +5,14 @@ export default class Operation extends React.Component {
 
   render() {
     return (
-      <AssMat
-        //films={this.props.favoritesFilm}
-        assMatList={this.props.favoritesAssMat}
-        navigation={this.props.navigation}
-        // Ici (en dessous) on est bien dans le cas de la liste des 'ass mat' favoris. 
-        //Ce booléen à true permettra d'empêcher de lancer la recherche de plus de 'ass mat' 
-        //après un scroll lorsqu'on est sur la vue Favoris.
-        favoriteList={true} 
-      />
+      <Text>
+        AssMatDispo est la solution de mise en relation entre les assistantes maternelles et les parents à la recherche d 'une place de garde d'
+        enfants.
+        Cette solution se veut aussi simple et aussi efficace que rapide.
+
+        Afin que cette mise en relation soit effective, l'inscription sur la plateforme est nécessaire.
+        Soyez donc parmi les PREMIERS INSCRITS GRATUITEMENT et profitez de cette belle opportunité.
+      </Text>
     )
   }
 }

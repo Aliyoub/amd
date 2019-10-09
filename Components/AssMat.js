@@ -10,9 +10,6 @@ import { AssMatTpl } from './AssMatTpl';
 class AssMat extends Component {
   constructor(props) {
     super(props)
-
-    this.page = 0
-    this.totalPages = 0
  
     this.state = {
       assMatList: [],
@@ -42,14 +39,19 @@ class AssMat extends Component {
                 // Ajout d'une props isAssMatFavorite pour indiquer à l'item d'afficher un 🖤 osu non
                 isAssMatFavorite = {(this.props.favoritesAssMat.findIndex(assMatItem => 
                   assMatItem.assMatKey === item.assMatKey) !== -1) ? true : false
-                  }
-                 // assMatItem.id === item.id) !== -1) ? true : false}                                         
+                  }                                        
                 _displayDetailsItem = {this._displayDetailsItem}              
               />
             }
             onEndReachedThreshold={0.5}
             onEndReached={() => {
-              this.props._loadAssMatList();
+              //alert('i++' + this.props.page)
+
+              if (!this.props.favoriteList && this.props.page < this.props.totalPages) {
+              //if (this.props.page < 39) {
+                this.props._loadAssMatList();
+                //alert(this.props.totalPages+'test')
+              }
             }} 
           />
         </ImageBackground>
@@ -64,62 +66,3 @@ const mapStateToProps = state => {
   }
 }
 export default connect(mapStateToProps)(AssMat)
-
-const styles = StyleSheet.create({
-  main_container: {
-    width: '100%',
-    color: 'red',
-    flexDirection: 'row',
-    alignItems: 'stretch'
-  },
-  blocAtTheBottomOfItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  userInfosWithoutAvatar: {
-    flexDirection: 'column',
-    flex: 1,
-    alignItems: 'center'
-  },
-
-
-  user_name: {
-    marginLeft: 15,
-    color: '#AC1354',
-    //color: '#C50707',
-    fontWeight: 'bold',
-    fontSize: 14
-
-  },
-  user_address: {
-    marginLeft: 15,
-    color: '#AC1354',
-    //color: '#C50707',
-    fontWeight: 'bold',
-    fontSize: 14
-  },
-  user_dispo: {
-    marginLeft: 15,
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 14,
-    backgroundColor: '#FF99DC',
-    padding: 3,
-    borderRadius: 100
-  },
-  user_places: {
-    marginLeft: 15,
-    color: '#B86547',
-    fontWeight: 'bold',
-    fontSize: 14
-  },
-  user_agrement: {
-    marginLeft: 15,
-    color: '#B86547',
-    fontWeight: 'bold',
-    fontSize: 14
-  },
-  myVoirPlusButton: {
-    fontSize: 10
-  }
-})

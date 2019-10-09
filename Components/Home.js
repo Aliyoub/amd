@@ -19,18 +19,22 @@ const iconsSet = {
  */
 export default class Home extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
+        this.page = 0
+        this.refAtStart = ''
+        totalPages = 0
         this.state= {
             //selected: 0,
             results: [],
             assMatList: [],
-            totalPages:undefined,
+            parentsList: [],
             tab: 0,
         }
         this._handleResults = this._handleResults.bind(this);
         this._hideSearchBar = this._hideSearchBar.bind(this);
         this._loadAssMatList = this._loadAssMatList.bind(this);
-        //this._displayDetailsItem = this._displayDetailsItem.bind(this);
+        this._loadParentsList = this._loadParentsList.bind(this);
+        this._init = this._init.bind(this); // ???
     }
 
     _handleResults(results) {
@@ -48,52 +52,76 @@ export default class Home extends React.Component {
     }
 
     _renderHeader() {
-    if(!this.state.searchBarExist) {
-        return (
-        <View style={styles.HeaderContainer} style={{backgroundColor:'#FCA4F0', flexDirection:'row'}}>
-            <View style={styles.leftHeaderContainer} style={{justifyContent:'center', flex:1 }}>
-                <Text style={styles.logoText}>AssMatDispo</Text>
+        if(!this.state.searchBarExist) {
+            return (
+            <View style={styles.HeaderContainer} style={{backgroundColor:'#FCA4F0', flexDirection:'row'}}>
+                <View style={styles.leftHeaderContainer} style={{justifyContent:'center', flex:1 }}>
+                    <Text style={styles.logoText}>AssMatDispo</Text>
+                </View>
+                <View style={styles.rightHeaderContainer} style={{backgroundColor:'#FCA4F0', alignItems:'flex-end'}}>
+                    <TouchableOpacity onPress = {
+                        () => this.props.navigation.navigate(this.state.tab === 0 ? 'Favorites' : 'ParentsFavorites')
+                    } >
+                        <Icon name="favorite" color='#FFF' size={23} 
+                            style={{padding:5, marginRight:10}}                         
+                        />                        
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.rightHeaderContainer} style={{backgroundColor:'#FCA4F0', alignItems:'flex-end'}}>
+                    <TouchableOpacity onPress = {
+                        () => this.props.navigation.navigate('Favorites')
+                    } >
+                        <Icon name="mail" color='#FFF' size={23} 
+                            style={{padding:5, marginRight:10}}                         
+                        />                        
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.rightHeaderContainer} style={{backgroundColor:'#FCA4F0', alignItems:'flex-end'}}>
+                    <TouchableOpacity onPress={() => this._showSearchBar()}>
+                        <Icon name="search" color='#FFF' size={23} 
+                            style={{padding:5, marginRight:10}}                         
+                        />                        
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={styles.rightHeaderContainer} style={{backgroundColor:'#FCA4F0', alignItems:'flex-end'}}>
-                < TouchableOpacity onPress = {
-                    () => this.props.navigation.navigate('Favorites')
-                } >
-                    <Icon name="favorite" color='#F660AA' size={23} 
-                        style={{padding:5, marginRight:10}}                         
-                    />                        
-                </TouchableOpacity>
-            </View>
-            <View style={styles.rightHeaderContainer} style={{backgroundColor:'#FCA4F0', alignItems:'flex-end'}}>
-                < TouchableOpacity onPress = {
-                    () => this.props.navigation.navigate('Favorites')
-                } >
-                    <Icon name="mail" color='#F660AA' size={23} 
-                        style={{padding:5, marginRight:10}}                         
-                    />                        
-                </TouchableOpacity>
-            </View>
-            <View style={styles.rightHeaderContainer} style={{backgroundColor:'#FCA4F0', alignItems:'flex-end'}}>
-                <TouchableOpacity onPress={() => this._showSearchBar()}>
-                    <Icon name="search" color='#fff' size={23} 
-                        style={{padding:5, marginRight:10}}                         
-                    />                        
-                </TouchableOpacity>
-            </View>
-        </View>
-        )
-    } 
-    else {return(<View style={{padding: 0, marginBottom:60}}></View>)}    
+            )
+        } 
+        else {return(<View style={{padding: 0, marginBottom:60}}></View>)}    
     }
 
-  _loadAssMatList() {
-      
-    // totalPages : Nombre total d'éléments dans AssMatDispo  
-    totalPages  = _getDataRef('AssMatDispo').once("value", function (snap) {
-          alert(snap.numChildren());
-      });
+    _init(){       
+        _getDataRef('AssMatDispo').limitToFirst(1).once("value", function (childSnapshot) {
+            this.lastRef = Object.keys(childSnapshot.val())
+            alert(this.lastRef + 'okokok')
+            });
+    }
 
-     //limitToFirst(10) Pour ne récupérer que 10 éléments à chaque chargement
-    _getDataRef('AssMatDispo').limitToFirst(5).on('value', (childSnapshot) => {
+    _loadAssMatList() {
+        this.page = this.page + 10
+        // alert(this.page)
+        //alert(this.state.offSet)
+
+        // totalPages : Nombre total d'éléments dans AssMatDispo  
+        /* this.totalPages  = _getDataRef('AssMatDispo').once("value", function (snap) {
+        return snap.numChildren();
+        }) ;
+        
+        // getRef : pour récupérer la clé du (this.page)ième élément  
+        /* getRef = _getDataRef('AssMatDispo').limitToFirst(this.page).once("value", function (snap) {
+            alert(Object.keys(snap.val()));
+        }); */                    
+        //alert(this.state.totalPages + ' ...' + this.state.lastRef)
+        
+        _getDataRef('AssMatDispo').limitToFirst(this.page).once("value", function (childSnapshot) {
+            this.refAtStart = Object.keys(childSnapshot.val()).pop();
+            //alert(this.refAtStart + '   refAtStart');
+        })
+
+        _getDataRef('AssMatDispo').
+        orderByKey().
+        startAt(this.refAtStart).
+        //limitToFirst(10) Pour ne récupérer que 10 éléments (à partir de startAt(...)) à chaque chargement
+        limitToFirst(20).on('value', (childSnapshot) => {
         const assMatList = [];
         childSnapshot.forEach((doc) => {
             assMatList.push({
@@ -103,27 +131,75 @@ export default class Home extends React.Component {
                 assMatFirstName: doc.toJSON().name.first,
                 assMatLastName: doc.toJSON().name.last,
                 assMatStreet: doc.toJSON().location.street,
-                assMatcity: doc.toJSON().location.city,
+                assMatCity: doc.toJSON().location.city,
+                });
+            });
+            this.setState({
+                assMatList: assMatList,
+                loading: false,
+                
+            });
+            //this.lastRef = this.state.assMatList[this.state.assMatList.length -1].assMatKey
+        });
+        
+        _getDataRef('AssMatDispo').once("value", (childSnapshot) => {
+            this.totalPages = childSnapshot.numChildren()               
+            //alert(this.totalPages)
+        })   
+    }
+    
+    _loadParentsList() {
+        this.page = this.page + 10
+        // getRef : pour récupérer la clé du (this.page)ième élément          
+        _getDataRef('Parents').limitToFirst(this.page).once("value", function (childSnapshot) {
+            this.refAtStart = Object.keys(childSnapshot.val()).pop();
+            //alert(this.refAtStart + '   refAtStart');
+        })
+        _getDataRef('Parents').
+        orderByKey().
+        startAt(this.refAtStart).
+        //limitToFirst(10) Pour ne récupérer que 10 éléments (à partir de startAt(...)) à chaque chargement
+        limitToFirst(10).on('value', (childSnapshot) => {
+            const parentsList = [];
+            childSnapshot.forEach((doc) => {
+                parentsList.push({
+                    parentKey: doc.key,
+                    parentId: doc.toJSON().id,
+                    //parentId: doc.toJSON().id.value,
+                    parentThumbnail: doc.toJSON().picture.thumbnail,
+                    parentFirstName: doc.toJSON().name.first,
+                    parentLastName: doc.toJSON().name.last,
+                    parentStreet: doc.toJSON().location.street,
+                    parentCity: doc.toJSON().location.city,
+                });
+            });
+            this.setState({
+                parentsList: parentsList,
+                loading: false,
+
             });
         });
-        this.setState({
-            assMatList: assMatList,
-            totalPages: childSnapshot.numChildren(),
-            loading: false,
-        });
-    });
-  }
-                
+
+        _getDataRef('Parents').once("value", (childSnapshot) => {
+            // totalPages : Nombre total d'éléments dans Parents
+            this.totalPages = childSnapshot.numChildren()
+            //alert(this.totalPages)
+        })
+    }
+    
     componentDidMount() {
     this._loadAssMatList();
-    //alert(this.state.totalPages)
+    this._loadParentsList();
     }
 
-    _displayDetailsItem = (assMatKey) => {
+    /* _displayDetailsItem = (assMatKey) => {
         //alert("Display item with id " + idDetailsItem)
         // pour récupérer les paramètres dans le component DetailsItem
         this.props.navigation.navigate("DetailsItem", {assMatKey: assMatKey})
-    }
+    } */
+    /* _displayParentsDetailsItem = (parentKey) => {
+        this.props.navigation.navigate("ParentsDetailsItem", {parentKey: parentKey})
+    } */
     
     
     render(){
@@ -132,8 +208,9 @@ export default class Home extends React.Component {
             <Fragment>
                 <StatusBar backgroundColor = '#F660AA' barStyle="dark-content" />                 
                 {this._renderHeader()}
+                {/*this._init()*/}
                 <ScrollableTabView 
-                    //initialPage={0}
+                    initialPage={0}
                     tabBarUnderlineStyle = {{backgroundColor: "#fff", height:2.5}} 
                     tabBarBackgroundColor = "#FCA4F0" 
                     tabBarActiveTextColor = "#fff" 
@@ -144,10 +221,22 @@ export default class Home extends React.Component {
                     {/* <Home tabLabel="HOME" /> */}
                     <AssMat tabLabel = "ASS MAT" 
                         assMatList =  {this.state.assMatList}  
+                        //navigation = {this.props.navigation}
                         _loadAssMatList = {this._loadAssMatList}
+                        lastRef = {this.lastRef}
+                        page={this.page}
+                        totalPages = {this.totalPages}
                         {...this.props}
                     />
-                    <Parents tabLabel = "PARENTS" {...this.props} />
+                    <Parents tabLabel = "PARENTS"
+                        parentsList =  {this.state.parentsList}  
+                        //navigation = {this.props.navigation}
+                        _loadParentsList = {this._loadParentsList}
+                        /* lastRef = {this.lastRef}
+                        page={this.page}
+                        totalPages = {this.totalPages} */
+                        {...this.props}
+                    />
                     <Operation tabLabel = "COMMENT?" {...this.props} />
                 </ScrollableTabView>
                 <SearchBar
@@ -164,7 +253,13 @@ export default class Home extends React.Component {
             )
         } 
      else{
-      //let pic = {uri: 'https://cdn.pixabay.com/photo/2013/02/21/19/10/mother-84628_960_720.jpg'};                   
+        /* this.page = 0
+        this.totalPages = 0
+        this.setState({
+            assMatList: [],
+            }, () => {
+                this._loadAssMatList()
+        }) */                 
         return (
             <Fragment>
                 <StatusBar backgroundColor= '#F660AA' barStyle="dark-content" />                 
@@ -173,6 +268,14 @@ export default class Home extends React.Component {
                    assMatList = {this.state.results}                                         
                    navigation = {this.props.navigation}
                    _loadAssMatList = {this._loadAssMatList}
+                   page={this.page}
+                   totalPages = {this.totalPages}
+
+                   // Ici on ajoute simplement un booléen à false 
+                   //pour indiquer qu'on n'est pas dans le cas de l'affichage de la liste des AssMat favoris. 
+                   //Et ainsi pouvoir déclencher le chargement de plus de AssMat lorsque l'utilisateur scrolle.
+                   favoriteList={false} 
+                   ParentsFavoriteList={false} 
                 />
                 <SearchBar
                     ref={(ref) => this.searchBar = ref}
@@ -202,20 +305,6 @@ export default class Home extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        backgroundColor: '#F5FCFF',
-        height: 24
-    },
-    headerContainer: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        backgroundColor: "#075e54",
-        alignItems: "center",
-        paddingRight: 5,
-        backgroundColor: '#F8F9FA',
-    },
     leftHeaderContainer: {
         alignItems: "flex-start",
         flexDirection: "row",
@@ -227,9 +316,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: '#F8F9FA',
         height:20
-    },
-    contentContainer: {
-        flex: 6,
     },
     logoText: {
         color: "#fff",

@@ -1,14 +1,14 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import AssMat from './AssMat'
+import Parents from './Parents'
 import { connect } from 'react-redux'
 
-class Favorites extends React.Component {
+class ParentsFavorites extends React.Component {
 
   render() {
     return (
-      <AssMat
-        assMatList={this.props.favoritesAssMat}
+      <Parents
+        parentsList={this.props.favoritesParents}
         navigation={this.props.navigation}
         // Ici (en dessous) on est bien dans le cas de la liste des 'ass mat' favoris. 
         //Ce booléen à true permettra d'empêcher de lancer la recherche de plus de 'ass mat' 
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({})
 
 const mapStateToProps = state => {
   return {
-    favoritesAssMat: state.favoritesAssMat
+    favoritesParents: state.favoritesParents
   }
 }
-export default connect(mapStateToProps)(Favorites)
+export default connect(mapStateToProps)(ParentsFavorites)
